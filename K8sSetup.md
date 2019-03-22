@@ -29,16 +29,16 @@ aws configure
 ap-southeast-1 (S3 does not work as of now with ap-south-1)
 
 #### Create and then list a new S3 bucket 
-aws s3 mb s3://cluster-1.aws-ha-k8s.bigdecisionsdemo.com
+aws s3 mb s3://cluster-1.aws-ha-k8s.example.com
 aws s3 ls | grep k8s
 
-export KOPS_STATE_STORE=s3://cluster-1.aws-ha-k8s.bigdecisionsdemo.com (Add this to .bashrc/.profile)
+export KOPS_STATE_STORE=s3://cluster-1.aws-ha-k8s.example.com (Add this to .bashrc/.profile)
 
 #### Create cluster
 kops create cluster \
 --cloud=aws --zones="ap-south-1a,ap-south-1b" \
---dns-zone=bigdecisionsdemo.com \
---name=cluster-1.aws-ha-k8s.bigdecisionsdemo.com \
+--dns-zone=example.com \
+--name=cluster-1.aws-ha-k8s.example.com \
 --vpc=<my-vpc> \
 --node-size=m4.2xlarge \
 --node-count=3 \
@@ -46,8 +46,8 @@ kops create cluster \
 
 kops create cluster \
 --cloud=aws --zones="ap-south-1a,ap-south-1b" \
---dns-zone=bigdecisionsdemo.com \
---name=cluster-1.aws-ha-k8s.bigdecisionsdemo.com \
+--dns-zone=example.com \
+--name=cluster-1.aws-ha-k8s.example.com \
 --vpc=vpc-02dcfb90fac1b76f1 \
 --node-size=m4.2xlarge \
 --node-count=3 \
@@ -55,26 +55,26 @@ kops create cluster \
 
 ## Useful Commands:
 * list clusters with: kops get cluster
-* edit this cluster with: kops edit cluster cluster-1.aws-ha-k8s.bigdecisionsdemo.com
-* edit your node instance group: kops edit ig --name=cluster-1.aws-ha-k8s.bigdecisionsdemo.com nodes
-* edit your master instance group: kops edit ig --name=cluster-1.aws-ha-k8s.bigdecisionsdemo.com master-ap-south-1a
+* edit this cluster with: kops edit cluster cluster-1.aws-ha-k8s.example.com
+* edit your node instance group: kops edit ig --name=cluster-1.aws-ha-k8s.example.com nodes
+* edit your master instance group: kops edit ig --name=cluster-1.aws-ha-k8s.example.com master-ap-south-1a
 
-kops update cluster cluster-1.aws-ha-k8s.bigdecisionsdemo.com --yes
+kops update cluster cluster-1.aws-ha-k8s.example.com --yes
 
-kops delete cluster --name cluster-1.aws-ha-k8s.bigdecisionsdemo.com --yes
+kops delete cluster --name cluster-1.aws-ha-k8s.example.com --yes
 
 To validate cluster: kops validate cluster
 To list nodes: kubectl get nodes --show-labels
 
-kubectl create configmap bigdecisions-conf-infrastructure --from-file=/opt/bigdecisions/deployment/conf/infrastructure.properties
-kubectl create configmap bigdecisions-conf-processflowengine --from-file=/opt/bigdecisions/deployment/conf/processflowengine.properties
+kubectl create configmap example-conf-infrastructure --from-file=/opt/example/deployment/conf/infrastructure.properties
+kubectl create configmap example-conf-processflowengine --from-file=/opt/example/deployment/conf/processflowengine.properties
 
 kubectl create secret docker-registry nexusdockercred --docker-server=https://nexus.bigdecisionsdemo.com:8445 --docker-username="user" --docker-password=pwd --docker-email=deploy@example.com
 
 ### Kubernetes dashboard
 kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/master/src/deploy/recommended/kubernetes-dashboard.yaml
 kubectl cluster-info
-Dashboard url: https://api.cluster-1.aws-ha-k8s.bigdecisionsdemo.com/api/v1/namespaces/kube-system/services/https:kubernetes-dashboard:/proxy/
+Dashboard url: https://api.cluster-1.aws-ha-k8s.example.com/api/v1/namespaces/kube-system/services/https:kubernetes-dashboard:/proxy/
 userid: admin
 password: Execute this command to get password(kops get secrets kube --type secret -oplaintext) or (kubectl config view)
 <pwd>
